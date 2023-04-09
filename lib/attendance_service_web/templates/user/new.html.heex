@@ -1,0 +1,46 @@
+<div>
+    Check in today
+    <script>
+    var time = new Date();
+    var date = time.getFullYear()+'-'+(time.getMonth()+1)+'-'+time.getDate();
+    var today= time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
+    var dateTime = date+' '+today;
+    document.write(dateTime);
+    </script>
+</div>
+    
+<%= if @changeset.action do %>
+    <div class="alert alert-danger">
+        <p>Oops, something went wrong! Please check the errors below.</p>
+    </div>
+    <% end %>
+        <%= form_for @changeset, Routes.user_path(@conn, :create),
+                     [multipart: true], fn f -> %>
+            <div>
+                <label>user name:</label>
+
+                <%= text_input f, :user_name, placeholder: "user name" %>
+                    <%= error_tag f, :user_name %>
+            </div>
+            <div>
+                <label>school name:</label>
+
+                <%= text_input f, :school_name, placeholder: "school name" %>
+                    <%= error_tag f, :school_name %>
+            </div>
+            <div>
+                <label>temperature:</label>
+
+                <%= text_input f, :temperature, placeholder: "temperature" %>
+                    <%= error_tag f, :temperature %>
+            </div>
+            <div>
+                <label>image:</label>
+
+                <%= file_input f, :file_name, placeholder: "Name" %>
+                    <%= error_tag f, :file_name %>
+            </div>
+            <%= submit "Create User" %>
+        <% end %>
+        <%= button("check out", to: "/users/check_out", method: :get) %>
+

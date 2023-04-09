@@ -16,7 +16,7 @@ defmodule AttendanceService.StorageService.User do
     def init(any) do
       :user_info =
         :ets.new(:user_info, [
-          :duplicate_bag,
+          :ordered_set,
           :public,
           :named_table,
           {:write_concurrency, true},
@@ -39,29 +39,34 @@ defmodule AttendanceService.StorageService.User do
     end
 
     @impl true
-    def handle_cast({:delete, object}, any) do
-      :ets.delete_object(:user_info, object)
+    def handle_cast({:delete, key}, any) do
+      :ets.delete(:user_info, key)
       {:noreply, any}
     end
 
     @impl true
     def handle_cast({:update_checkout, data}, any) do
-      {user_name, school_name, temperature, image, timestamp, _} = data
-      :ets.delete_object(:user_info, data)
-      :ets.insert(:user_info, {user_name, school_name, temperature, image,
-                  timestamp, "check_out"})
+      {user_id, user_name, school_name, temperature, image, timestamp, _} = data
+      :ets.insert(:user_info, {user_id, user_name, school_name, temperature,
+                  image, timestamp, "check_out"})
       {:noreply, any}
     end
 
     @impl true
+    def handle_call({:get_user, {:key, user_id}}, _from, any) do
+      user = :ets.lookup(:user_info, user_id)
+      {:reply, user, any}
+    end
+
     def handle_call({:get_user, {user_name, school_name}}, _from, any) do
-      user = :ets.match_object(:user_info, {user_name, school_name, :_, :_, :_,
-                               :_})
+      user = :ets.match_object(:user_info, {:_, user_name, school_name, :_, :_,
+                               :_, :_})
       {:reply, user, any}
     end
 
     def handle_call({:get_user, {school_name}}, _from, any) do
-      user = :ets.match_object(:user_info, {:_, school_name, :_, :_, :_, :_})
+      user = :ets.match_object(:user_info, {:_, :_, school_name, :_, :_, :_,
+                               :_})
       {:reply, user, any}
     end
 

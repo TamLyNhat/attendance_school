@@ -18,6 +18,12 @@ defmodule AttendanceServiceWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/users/new", UserController, :new
+    post "/users", UserController, :create
+    post "/users/check_out", UserController, :check
+    get "/users/check_out", UserController, :check_out
+
+
   end
 
   # Other scopes may use custom stacks.

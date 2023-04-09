@@ -1,0 +1,13 @@
+<div>
+    Check out
+</div>
+<%= form_for @changeset, Routes.user_path(@conn, :check), fn f -> %>
+    <div>
+        <label>user id:</label>
+        <%= text_input f, :user_id, placeholder: "user id" %>
+            <%= error_tag f, :user_id %>
+    </div>
+    <%= submit "Check out" %>
+<% end %>
+<%= button("create account", to: "/users/new", method: :get) %>
+

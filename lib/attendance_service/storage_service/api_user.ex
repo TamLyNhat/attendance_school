@@ -40,8 +40,17 @@ defmodule AttendanceService.StorageService.ApiUser do
   @doc """
   Get user term info base on school_name
   """
-  @spec get_user_sc(:storage_server,  tuple()) :: list()
-  def get_user_sc(server, {_school_name} = object) do
+  @spec get_user_base_on_sc(:storage_server,  tuple()) :: list()
+  def get_user_base_on_sc(server, {_school_name} = object) do
+    fun = &GenServer.call(&1, {:get_user, object})
+    exec_func(server, fun)
+  end
+
+  @doc """
+  Get user term info base on user_id
+  """
+  @spec get_user_base_on_id(:storage_server,  tuple()) :: list()
+  def get_user_base_on_id(server, {:key, _user_id} = object) do
     fun = &GenServer.call(&1, {:get_user, object})
     exec_func(server, fun)
   end
