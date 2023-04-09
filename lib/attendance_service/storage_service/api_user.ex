@@ -55,6 +55,15 @@ defmodule AttendanceService.StorageService.ApiUser do
     exec_func(server, fun)
   end
 
+  @doc """
+  Get high fever users by school when temperature higher than 38 degree
+  """
+  @spec get_higher_fever(:storage_server,  tuple()) :: list()
+  def get_higher_fever(server, {:get_higher_fever, school_name}) do
+    fun = &GenServer.call(&1, {:get_higher_fever, school_name})
+    exec_func(server, fun)
+  end
+
   defp exec_func(_server, :ok) do
     :ok
   end

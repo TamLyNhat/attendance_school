@@ -1,6 +1,8 @@
 defmodule AttendanceServiceWeb.Router do
   use AttendanceServiceWeb, :router
 
+  import Phoenix.LiveView.Router
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -23,7 +25,7 @@ defmodule AttendanceServiceWeb.Router do
     post "/users/check_out", UserController, :check
     get "/users/check_out", UserController, :check_out
 
-
+    live "/highfever", HighFeverController
   end
 
   # Other scopes may use custom stacks.

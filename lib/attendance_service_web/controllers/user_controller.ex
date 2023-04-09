@@ -31,8 +31,6 @@ defmodule AttendanceServiceWeb.UserController do
         |> put_flash(:info, "Wrong user id or you did not created account yet.")
         |> redirect(to: Routes.user_path(conn, :check_out))
       [data] ->
-        Logger.debug("zlyxtam_debug_data__#{__MODULE__}__: #{inspect(data)}")
-
         ApiUser.update_checkout(@server, data)
         conn
         |> put_flash(:info, "checkout sucessfully !")

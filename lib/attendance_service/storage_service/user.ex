@@ -70,6 +70,12 @@ defmodule AttendanceService.StorageService.User do
       {:reply, user, any}
     end
 
+    def handle_call({:get_higher_fever, school_name}, _from, any) do
+      users = :ets.select(:user_info, [{{:_, :_, school_name, :"$1", :_, :_,
+                          :_}, [{:>, :"$1", 38}], [:"$_"]}])
+      {:reply, users, any}
+    end
+
     @impl true
     def terminate(_reason, _any) do
       :ok
