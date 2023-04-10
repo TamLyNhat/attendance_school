@@ -7,16 +7,25 @@ defmodule AttendanceServiceWeb.UserController do
   @server :storage_server
   require Logger
 
+  @doc """
+  Load new.html for check-in page.
+  """
   def new(conn, _params) do
     changeset = Accounts.change_user(%Users{})
     render(conn, "new.html", changeset: changeset)
   end
 
+  @doc """
+  Load check-out.html for check-out page.
+  """
   def check_out(conn, _params) do
     changeset = Accounts.change_user(%Users{})
     render(conn, "check_out.html", changeset: changeset)
   end
 
+  @doc """
+  Handle error when user is empty.
+  """
   def check(conn,  %{"users" => %{"user_id" => ""}}) do
     changeset = Accounts.change_user(%Users{})
 
@@ -24,8 +33,14 @@ defmodule AttendanceServiceWeb.UserController do
     |> put_flash(:info, "wrong input!")
     |> render("check_out.html", changeset: changeset)
   end
+
+  @doc """
+  Change type to check-out if user is created into the system, otherwise
+  notification will report.
+  """
   def check(conn,  %{"users" => %{"user_id" => user_id}}) do
-    case ApiUser.get_user_base_on_id(@server, {:key, String.to_integer(user_id)}) do
+    case ApiUser.get_user_base_on_id(@server, {:key,
+                                     String.to_integer(user_id)}) do
       [] ->
         conn
         |> put_flash(:info, "Wrong user id or you did not created account yet.")
@@ -38,10 +53,13 @@ defmodule AttendanceServiceWeb.UserController do
     end
   end
 
+  @doc """
+  Create user
+  """
   def create(conn, %{"users" => %{"user_name" => user_name,
-                                      "school_name" => school_name,
-                                      "temperature" => temperature,
-                                      "file_name" => file_name} =
+                                  "school_name" => school_name,
+                                  "temperature" => temperature,
+                                  "file_name" => file_name} =
              user_params}) do
     timestamps = :calendar.local_time()
     type = "check-in"
@@ -56,6 +74,9 @@ defmodule AttendanceServiceWeb.UserController do
     end
   end
 
+  @doc """
+  Handle negative case when image is not selected
+  """
   def create(conn, _user_params) do
     changeset = Accounts.change_user(%Users{})
 
@@ -64,12 +85,10 @@ defmodule AttendanceServiceWeb.UserController do
     |> render("new.html", changeset: changeset)
   end
 
-
-  def handle_event("check_out", _value, socket) do
-    {:ok, new_temp} = Thermostat.inc_temperature(socket.assigns.id)
-    {:noreply, assign(socket, :temperature, new_temp)}
-  end
-
+  @doc """
+  Insert user with random user_id, if there is same user_id in the database,
+  new user_id will be populate again.
+  """
   def insert_and_redirect(conn, user_name, school_name, temperature,
                           new_file_name, timestamps, type) do
     key_random = Enum.random(0..1000000000)

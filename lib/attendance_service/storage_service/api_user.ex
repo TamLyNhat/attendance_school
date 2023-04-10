@@ -64,6 +64,15 @@ defmodule AttendanceService.StorageService.ApiUser do
     exec_func(server, fun)
   end
 
+  @doc """
+  Get list school
+  """
+  @spec get_list_school(:storage_server) :: list()
+  def get_list_school(server) do
+    fun = &GenServer.call(&1, {:get_list_school})
+    exec_func(server, fun)
+  end
+
   defp exec_func(_server, :ok) do
     :ok
   end

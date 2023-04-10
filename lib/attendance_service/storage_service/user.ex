@@ -76,6 +76,13 @@ defmodule AttendanceService.StorageService.User do
       {:reply, users, any}
     end
 
+    def handle_call({:get_list_school}, _from, any) do
+      list_school =
+        :ets.select(:user_info, [{{:_, :_, :"$1", :_, :_, :_, :_}, [], [:"$1"]}])
+        |> Enum.uniq()
+      {:reply, list_school, any}
+    end
+
     @impl true
     def terminate(_reason, _any) do
       :ok
