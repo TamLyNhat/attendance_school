@@ -39,16 +39,23 @@ defmodule AttendanceServiceWeb.UserController do
   notification will report.
   """
   def check(conn,  %{"users" => %{"user_id" => user_id}}) do
-    case ApiUser.get_user_base_on_id(@server, {:key,
-                                     String.to_integer(user_id)}) do
-      [] ->
+    try do
+      case ApiUser.get_user_base_on_id(@server, {:key,
+                                      String.to_integer(user_id)}) do
+        [] ->
+          conn
+          |> put_flash(:info, "Wrong user id or you did not created account yet.")
+          |> redirect(to: Routes.user_path(conn, :check_out))
+        [data] ->
+          ApiUser.update_checkout(@server, data)
+          conn
+          |> put_flash(:info, "checkout sucessfully !")
+          |> redirect(to: Routes.user_path(conn, :check_out))
+      end
+    rescue
+      ArgumentError ->
         conn
-        |> put_flash(:info, "Wrong user id or you did not created account yet.")
-        |> redirect(to: Routes.user_path(conn, :check_out))
-      [data] ->
-        ApiUser.update_checkout(@server, data)
-        conn
-        |> put_flash(:info, "checkout sucessfully !")
+        |> put_flash(:error, "Wrong format! You should type number of user_id")
         |> redirect(to: Routes.user_path(conn, :check_out))
     end
   end
