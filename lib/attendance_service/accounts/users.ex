@@ -62,7 +62,6 @@ defmodule AttendanceService.Accounts.Users do
     for(n <- 61..80, do: fun3.(n))
     for(n <- 81..82, do: fun4.(n))
 
-
   end
 
   @doc """
@@ -83,6 +82,29 @@ defmodule AttendanceService.Accounts.Users do
 
   def get_list(start_num, end_num, data) do
     [Enum.at(data, start_num)] ++ get_list(start_num + 1, end_num, data)
+  end
+
+  def add_sample_data_for_date() do
+      fun = fn(user_id, name) ->
+          month_random = Enum.random(1..12)
+          last_date = :calendar.last_day_of_the_month(2023, month_random)
+          date_random = Enum.random(1..last_date)
+          case :calendar.day_of_the_week(2023, month_random, date_random) do
+            weekend when weekend == 6 or weekend == 7 ->
+              :ok
+            _ ->
+              ApiUser.insert(:storage_server, {user_id, "join" <>
+                            name, "aaaa", 20,
+                            {<<137, 80, 78>>, "temp60119.png"},
+                            {{2023, month_random, date_random}, {1, 1, 1}},
+                            "check_in"})
+          end
+      end
+
+      for(n <- 1..50, do: fun.(n, "1"))
+      for(n <- 51..100, do: fun.(n, "2"))
+      for(n <- 101..150, do: fun.(n, "3"))
+      for(n <- 151..200, do: fun.(n, "4"))
   end
 
 end

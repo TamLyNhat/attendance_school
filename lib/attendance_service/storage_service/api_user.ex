@@ -73,6 +73,15 @@ defmodule AttendanceService.StorageService.ApiUser do
     exec_func(server, fun)
   end
 
+  @doc """
+  Get list users
+  """
+  @spec get_list_users(:storage_server) :: list()
+  def get_list_users(server) do
+    fun = &GenServer.call(&1, {:get_list_users})
+    exec_func(server, fun)
+  end
+
   defp exec_func(_server, :ok) do
     :ok
   end

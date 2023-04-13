@@ -26,6 +26,7 @@ defmodule AttendanceServiceWeb.Router do
     get "/users/check_out", UserController, :check_out
 
     live "/highfever", HighFeverController
+    live "/attendance_aggregated", AttendanceAggregatedController
   end
 
   # Other scopes may use custom stacks.

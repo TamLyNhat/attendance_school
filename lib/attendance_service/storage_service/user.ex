@@ -78,9 +78,18 @@ defmodule AttendanceService.StorageService.User do
 
     def handle_call({:get_list_school}, _from, any) do
       list_school =
-        :ets.select(:user_info, [{{:_, :_, :"$1", :_, :_, :_, :_}, [], [:"$1"]}])
+        :ets.select(:user_info, [{{:_, :_, :"$1", :_, :_, :_, :_}, [],
+        [:"$1"]}])
         |> Enum.uniq()
       {:reply, list_school, any}
+    end
+
+    def handle_call({:get_list_users}, _from, any) do
+      list_users =
+        :ets.select(:user_info, [{{:_, :"$1", :_, :_, :_, :_, :_}, [],
+                                   [:"$1"]}])
+        |> Enum.uniq()
+      {:reply, list_users, any}
     end
 
     @impl true
