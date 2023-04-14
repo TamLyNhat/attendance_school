@@ -12,8 +12,6 @@ defmodule AttendanceService.Accounts.Users do
     timestamps()
   end
 
-  require Logger
-
   def changeset(users, params \\ %{}) do
 
     users

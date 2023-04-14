@@ -29,11 +29,8 @@ defmodule AttendanceServiceWeb.TypeSelect do
   @doc """
   Handle event change when click school name
   """
-  require Logger
   @impl true
   def handle_event("change_type", params, socket) do
-    Logger.debug("zlyxtam_debug_params__#{__MODULE__}__: #{inspect(params)}")
-
     send self(), {:search, params}
     {:noreply, socket}
   end

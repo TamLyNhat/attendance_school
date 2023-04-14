@@ -5,7 +5,6 @@ defmodule AttendanceServiceWeb.UserController do
   alias AttendanceService.StorageService.ApiUser
 
   @server :storage_server
-  require Logger
 
   @doc """
   Load new.html for check-in page.

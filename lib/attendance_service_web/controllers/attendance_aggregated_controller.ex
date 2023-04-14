@@ -20,8 +20,6 @@ defmodule AttendanceServiceWeb.AttendanceAggregatedController do
   And get all user has temperature higher than 38 degree, then push data to
   AttendanceServiceWeb.ShowDataSchoolSelected
   """
-  require Logger
-
   @impl true
   def handle_info({:search, %{"search" => %{"change_type" => new_type}}},
                   socket) do
